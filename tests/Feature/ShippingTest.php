@@ -1,15 +1,44 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Models\ShippingMethod;
 use App\Models\ShippingZone;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class ShippingTest extends TestCase {
-    use RefreshDatabase;
+class ShippingTest extends TestCase
+{
+    use DatabaseTransactions;
 
-    public function test_can_calculate_shipping_fee() {
+    public function test_can_get_shipping_zones()
+    {
+        ShippingZone::factory()->count(5)->create();
+
+        $response = $this->getJson('/api/shipping/zone?page=1&per_page=5');
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'status',
+                'message',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'zone_name',
+                        'additional_fee',
+                    ],
+                ],
+                'pagination' => [
+                    'current_page',
+                    'last_page',
+                    'per_page',
+                    'total',
+                ],
+            ]);
+    }
+
+    public function test_can_calculate_shipping_fee()
+    {
         $zone = ShippingZone::factory()->create([
             'zone_name' => 'City A',
             'additional_fee' => 10,
@@ -27,10 +56,51 @@ class ShippingTest extends TestCase {
             'destination' => 'City A',
         ]);
 
-        $response->assertStatus(200)
-        ->assertJson([
-            'total_fee' => 50 + (5 * 2) + 10, // base_cost + (cost_per_kg * weight) + additional_fee
+        $expectedTotalFee = $method->base_cost + ($method->cost_per_kg * 2) + $zone->additional_fee;
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'status' => true,
+                'message' => 'Đơn hàng đã được tạo thành công.',
+                'total_fee' => $expectedTotalFee,
+            ]);
+    }
+
+    public function test_can_create_shipping_zone()
+    {
+        $response = $this->postJson('/api/shipping/zone', [
+            'zone_name' => 'Zone 1',
+            'additional_fee' => 5.0,
         ]);
-    
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'status' => true,
+                'message' => 'Tạo khu vực vận chuyển thành công',
+            ]);
+
+        $this->assertDatabaseHas('shipping_zones', [
+            'zone_name' => 'Zone 1',
+            'additional_fee' => 5.0,
+        ]);
+    }
+
+    public function test_cannot_create_duplicate_shipping_zone()
+    {
+        ShippingZone::factory()->create(['zone_name' => 'Zone 1']);
+
+        $response = $this->postJson('/api/shipping/zone', [
+            'zone_name' => 'Zone 1',
+            'additional_fee' => 5.0,
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'status',
+                'message',
+                'errors' => [
+                    'zone_name',
+                ],
+            ]);
     }
 }

@@ -1,0 +1,1114 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Shipping API",
+        "description": "API quản lý vận chuyển, tính phí, và quản lý phương thức vận chuyển.",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API LocalHost Server"
+        },
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/shipping/zone": {
+            "get": {
+                "tags": [
+                    "1. Get Shipping"
+                ],
+                "summary": "Lấy danh sách khu vực vận chuyển (có phân trang)",
+                "operationId": "3cdd15d986cab088dfe30fd31a667793",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang hiện tại",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Số lượng mục trên mỗi trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Danh sách khu vực vận chuyển có phân trang",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy danh sách khu vực vận chuyển thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ShippingZone"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dữ liệu không hợp lệ"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "per_page": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Số mục trên mỗi trang phải là một số nguyên."
+                                                    }
+                                                },
+                                                "page": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Trang phải là một số nguyên."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "2. Post Shipping"
+                ],
+                "summary": "Tạo khu vực vận chuyển mới",
+                "operationId": "275a5e179520dded429edc2d46164f6d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "zone_name",
+                                    "additional_fee"
+                                ],
+                                "properties": {
+                                    "zone_name": {
+                                        "type": "string",
+                                        "example": "Zone 1"
+                                    },
+                                    "additional_fee": {
+                                        "type": "number",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tạo khu vực vận chuyển thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "zone_name": {
+                                                    "type": "string",
+                                                    "example": "Zone 1"
+                                                },
+                                                "additional_fee": {
+                                                    "type": "number",
+                                                    "example": 5
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lỗi dữ liệu đầu vào"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "zone_name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "zone_name đã tồn tại."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Lỗi máy chủ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đã xảy ra lỗi trong quá trình tạo khu vực vận chuyển"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Lỗi database..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/shipping/method": {
+            "get": {
+                "tags": [
+                    "1. Get Shipping"
+                ],
+                "summary": "Lấy danh sách phương thức vận chuyển (có phân trang)",
+                "operationId": "307c87d3a6b6762d8fd6d547dd409569",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Lọc theo tên phương thức vận chuyển",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "estimated_days",
+                        "in": "query",
+                        "description": "Lọc theo số ngày giao hàng dự kiến",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Trường cần sắp xếp (base_cost hoặc estimated_days)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "base_cost",
+                                "estimated_days"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "description": "Thứ tự sắp xếp (asc hoặc desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang hiện tại",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Số lượng mục trên mỗi trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Danh sách phương thức vận chuyển có phân trang",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy danh sách thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ShippingMethod"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dữ liệu không hợp lệ"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "per_page": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Số mục trên mỗi trang phải là một số nguyên từ 1 đến 100."
+                                                    }
+                                                },
+                                                "page": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Trang phải là một số nguyên lớn hơn hoặc bằng 1."
+                                                    }
+                                                },
+                                                "sort_by": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Trường sắp xếp chỉ được nhận giá trị base_cost hoặc estimated_days."
+                                                    }
+                                                },
+                                                "sort_order": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Thứ tự sắp xếp chỉ được nhận giá trị asc hoặc desc."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "3. Shipping Methods"
+                ],
+                "summary": "Tạo phương thức vận chuyển mới",
+                "operationId": "8eff821e8cd65ae1979ba434b10435af",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "base_cost",
+                                    "cost_per_kg"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Express Delivery"
+                                    },
+                                    "base_cost": {
+                                        "type": "number",
+                                        "example": 10
+                                    },
+                                    "cost_per_kg": {
+                                        "type": "number",
+                                        "example": 2
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Dịch vụ giao hàng nhanh trong 24h"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tạo phương thức vận chuyển thành công"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "id": 1,
+                                                "name": "Express Delivery",
+                                                "base_cost": 10,
+                                                "cost_per_kg": 2,
+                                                "description": "Dịch vụ giao hàng nhanh trong 24h"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Lỗi dữ liệu đầu vào",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lỗi dữ liệu đầu vào"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": [
+                                                    "Tên đã tồn tại"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Lỗi hệ thống",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lỗi máy chủ"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Chi tiết lỗi..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/shipping/calculate": {
+            "post": {
+                "tags": [
+                    "2. Post Shipping"
+                ],
+                "summary": "Tính phí vận chuyển",
+                "operationId": "571efc7b445235d622fec0d644f11ae8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "shipping_method_id",
+                                    "weight",
+                                    "destination"
+                                ],
+                                "properties": {
+                                    "shipping_method_id": {
+                                        "description": "ID của phương thức vận chuyển",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "weight": {
+                                        "description": "Khối lượng hàng hóa (kg)",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 2.5
+                                    },
+                                    "destination": {
+                                        "description": "Điểm đến giao hàng",
+                                        "type": "string",
+                                        "example": "Hà Nội"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Đơn hàng được tạo thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đơn hàng đã được tạo thành công."
+                                        },
+                                        "total_fee": {
+                                            "description": "Tổng phí vận chuyển",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 15.5
+                                        },
+                                        "order_id": {
+                                            "description": "ID của đơn hàng vừa tạo",
+                                            "type": "integer",
+                                            "example": 123
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dữ liệu đầu vào không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dữ liệu không hợp lệ."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "shipping_method_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Phương thức vận chuyển không hợp lệ."
+                                                    }
+                                                },
+                                                "weight": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Khối lượng phải là một số lớn hơn hoặc bằng 0."
+                                                    }
+                                                },
+                                                "destination": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Điểm đến không được để trống."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Lỗi hệ thống",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lỗi máy chủ."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Lỗi không xác định."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/shipping/method/{id}": {
+            "get": {
+                "tags": [
+                    "1. Get Shipping"
+                ],
+                "summary": "Lấy chi tiết phương thức vận chuyển theo ID",
+                "operationId": "689befd6ff1e743a8a927cb3008fab59",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của phương thức vận chuyển",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Lấy chi tiết phương thức vận chuyển thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy thông tin thành công"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Lỗi hệ thống",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lỗi hệ thống"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "3. Shipping Methods"
+                ],
+                "summary": "Cập nhật phương thức vận chuyển",
+                "operationId": "608b434e1fb208f130099eea7474c506",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của phương thức vận chuyển",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "base_cost",
+                                    "cost_per_kg",
+                                    "estimated_days"
+                                ],
+                                "properties": {
+                                    "base_cost": {
+                                        "type": "number",
+                                        "example": 12
+                                    },
+                                    "cost_per_kg": {
+                                        "type": "number",
+                                        "example": 2.5
+                                    },
+                                    "estimated_days": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cập nhật thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cập nhật phương thức vận chuyển thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "base_cost": {
+                                                    "type": "number",
+                                                    "example": 12
+                                                },
+                                                "cost_per_kg": {
+                                                    "type": "number",
+                                                    "example": 2.5
+                                                },
+                                                "estimated_days": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Lỗi dữ liệu đầu vào",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lỗi dữ liệu đầu vào"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "base_cost": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Chi phí cơ bản phải là số và không được âm."
+                                                    }
+                                                },
+                                                "cost_per_kg": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Chi phí mỗi kg phải là số và không được âm."
+                                                    }
+                                                },
+                                                "estimated_days": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Số ngày dự kiến phải là số nguyên dương."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Lỗi máy chủ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đã xảy ra lỗi trong quá trình cập nhật"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Chi tiết lỗi"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "3. Shipping Methods"
+                ],
+                "summary": "Xóa phương thức vận chuyển",
+                "operationId": "20e0d126aa8ca62671274e552eb85b6d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của phương thức vận chuyển",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Xóa thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Xóa phương thức vận chuyển thành công"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Không thể xóa do đang được sử dụng",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Không thể xóa: Phương thức vận chuyển đang được sử dụng"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Lỗi máy chủ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đã xảy ra lỗi trong quá trình xóa"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Chi tiết lỗi"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ShippingZone": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "zone_name": {
+                        "type": "string",
+                        "example": "New York"
+                    },
+                    "additional_fee": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 5
+                    }
+                },
+                "type": "object"
+            },
+            "ShippingMethod": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Express Delivery"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Dịch vụ giao hàng nhanh trong 24h",
+                        "nullable": true
+                    },
+                    "base_cost": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 10
+                    },
+                    "cost_per_kg": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2
+                    },
+                    "estimated_days": {
+                        "type": "integer",
+                        "example": 3
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "1. Get Shipping",
+            "description": "1. Get Shipping"
+        },
+        {
+            "name": "2. Post Shipping",
+            "description": "2. Post Shipping"
+        },
+        {
+            "name": "3. Shipping Methods",
+            "description": "3. Shipping Methods"
+        }
+    ]
+}
